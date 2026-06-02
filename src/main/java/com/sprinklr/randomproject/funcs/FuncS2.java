@@ -15,4 +15,10 @@ public class FuncS2 {
         System.out.println("func_22: " + a + " ^ " + b + " = " + result);
         return result;
     }
+
+    public int func_23(int a, int b) {
+        int result = Math.max(a, b);
+        System.out.println("func_23: max(" + a + ", " + b + ") = " + result);
+        return result;
+    }
 }

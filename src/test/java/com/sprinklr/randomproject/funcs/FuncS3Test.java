@@ -12,6 +12,10 @@ public class FuncS3Test {
         assert funcS3.func_32(5, 3) == 7 : "func_32 failed for (5, 3)";
         assert funcS3.func_32(5, 5) == 5 : "func_32 failed for (5, 5)";
 
+        // Test func_33
+        assert funcS3.func_33(5, 3) == 6 : "func_33 failed for (5, 3)";
+        assert funcS3.func_33(5, 5) == 0 : "func_33 failed for (5, 5)";
+
         System.out.println("All tests passed!");
     }
 }

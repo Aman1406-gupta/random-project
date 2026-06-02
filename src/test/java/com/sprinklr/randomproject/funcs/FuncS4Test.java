@@ -12,6 +12,10 @@ public class FuncS4Test {
         assert funcS4.func_42(4, 1) == 2 : "func_42 failed for (4, 1)";
         assert funcS4.func_42(8, 2) == 2 : "func_42 failed for (8, 2)";
 
+        // Test func_43
+        assert funcS4.func_43(-1, 1) == 2147483647 : "func_43 failed for (-1, 1)";
+        assert funcS4.func_43(-2, 1) == 1073741823 : "func_43 failed for (-2, 1)";
+
         System.out.println("All tests passed!");
     }
 }
