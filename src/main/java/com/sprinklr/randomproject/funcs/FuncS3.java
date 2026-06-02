@@ -6,4 +6,10 @@ public class FuncS3 {
         System.out.println("func_31: " + a + " & " + b + " = " + result);
         return result;
     }
+
+    public int func_32(int a, int b) {
+        int result = a | b;
+        System.out.println("func_32: " + a + " | " + b + " = " + result);
+        return result;
+    }
 }

@@ -13,6 +13,10 @@ public class FuncS2Test {
             assert e.getMessage().equals("func_21: Modulo by zero is not allowed") : "func_21 failed";
         }
 
+        // Test func_22
+        assert funcS2.func_22(2, 3) == 8 : "func_22 failed for (2, 3)";
+        assert funcS2.func_22(5, 3) == 125 : "func_22 failed for (5, 3)";
+
         System.out.println("All tests passed!");
     }
 }
