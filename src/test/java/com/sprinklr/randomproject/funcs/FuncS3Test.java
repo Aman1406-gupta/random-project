@@ -3,7 +3,7 @@ package com.sprinklr.randomproject.funcs;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class FuncS3Test {
+public class FuncS3Test {
 
     private final FuncS3 funcS3 = new FuncS3();
 
