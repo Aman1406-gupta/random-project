@@ -18,4 +18,10 @@ public class FuncS4 {
         System.out.println("func_43: " + a + " >>> " + b + " = " + result);
         return result;
     }
+
+    public int func_44(int a, int b) {
+        int result = Integer.compare(a, b);
+        System.out.println("func_44: compare(" + a + ", " + b + ") = " + result);
+        return result;
+    }
 }

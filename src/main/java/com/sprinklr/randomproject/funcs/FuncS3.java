@@ -18,4 +18,10 @@ public class FuncS3 {
         System.out.println("func_33: " + a + " ^ " + b + " = " + result);
         return result;
     }
+
+    public int func_34(int a, int b) {
+        int result = (a == b) ? 1 : 0;
+        System.out.println("func_34: " + a + " == " + b + " = " + result);
+        return result;
+    }
 }

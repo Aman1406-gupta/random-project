@@ -16,6 +16,15 @@ public class FuncS1Test {
         assert funcS1.func_13(5, 3) == 15 : "func_13 failed";
         assert funcS1.func_13(-2, 4) == -8 : "func_13 failed";
 
+        // Test func_14
+        assert funcS1.func_14(10, 2) == 5 : "func_14 failed";
+        try {
+            funcS1.func_14(10, 0);
+            assert false : "func_14 failed"; // Should have thrown an exception
+        } catch (IllegalArgumentException e) {
+            assert e.getMessage().equals("func_14: Division by zero is not allowed") : "func_14 failed";
+        }
+
         System.out.println("All tests passed!");
     }
 }
