@@ -17,4 +17,10 @@ class FuncS2Test {
 
         assertEquals("func_21: Modulo by zero is not allowed", ex.getMessage());
     }
+
+    @Test
+    void testFunc22() {
+        assertEquals(8, funcS2.func_22(2, 3));
+        assertEquals(125, funcS2.func_22(5, 3));
+    }
 }
