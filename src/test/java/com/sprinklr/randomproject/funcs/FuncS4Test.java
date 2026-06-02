@@ -24,4 +24,10 @@ class FuncS4Test {
         assertEquals(2147483647, funcS4.func_43(-1, 1));
         assertEquals(1073741823, funcS4.func_43(-2, 1));
     }
+
+    @Test
+    void testFunc44() {
+        assertEquals(-1, funcS4.func_44(5, 10));
+        assertEquals(0, funcS4.func_44(7, 7));
+    }
 }
