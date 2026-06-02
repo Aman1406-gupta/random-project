@@ -18,4 +18,10 @@ class FuncS3Test {
         assertEquals(7, funcS3.func_32(5, 3));
         assertEquals(5, funcS3.func_32(5, 5));
     }
+
+    @Test
+    void testFunc33() {
+        assertEquals(6, funcS3.func_33(5, 3));
+        assertEquals(0, funcS3.func_33(5, 5));
+    }
 }

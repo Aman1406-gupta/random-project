@@ -16,4 +16,9 @@ class FuncS1Test {
     void testFunc12() {
         assertEquals(2, funcS1.func_12(5, 3));
     }
+
+    @Test
+    void testFunc13() {
+        assertEquals(15, funcS1.func_13(5, 3));
+    }
 }

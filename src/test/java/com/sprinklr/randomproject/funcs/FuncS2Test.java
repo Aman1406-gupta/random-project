@@ -23,4 +23,10 @@ class FuncS2Test {
         assertEquals(8, funcS2.func_22(2, 3));
         assertEquals(125, funcS2.func_22(5, 3));
     }
+
+    @Test
+    void testFunc23() {
+        assertEquals(5, funcS2.func_23(5, 3));
+        assertEquals(4, funcS2.func_23(-2, 4));
+    }
 }
