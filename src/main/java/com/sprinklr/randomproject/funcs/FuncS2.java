@@ -9,22 +9,4 @@ public class FuncS2 {
         System.out.println("func_21: " + a + " % " + b + " = " + result);
         return result;
     }
-
-    public int func_22(int a, int b) {
-        int result = (int) Math.pow(a, b);
-        System.out.println("func_22: " + a + " ^ " + b + " = " + result);
-        return result;
-    }
-
-    public int func_23(int a, int b) {
-        int result = Math.max(a, b);
-        System.out.println("func_23: max(" + a + ", " + b + ") = " + result);
-        return result;
-    }
-
-    public int func_24(int a, int b) {
-        int result = Math.min(a, b);
-        System.out.println("func_24: min(" + a + ", " + b + ") = " + result);
-        return result;
-    }
 }

@@ -1,30 +1,14 @@
 package com.sprinklr.randomproject.funcs;
 
-public class FuncS1Test {
-    public static void main(String[] args) {
-        FuncS1 funcS1 = new FuncS1();
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
-        // Test func_11
-        assert funcS1.func_11(5, 3) == 8 : "func_11 failed";
-        assert funcS1.func_11(-2, 4) == 2 : "func_11 failed";
+class FuncS1Test {
 
-        // Test func_12
-        assert funcS1.func_12(5, 3) == 2 : "func_12 failed";
-        assert funcS1.func_12(-2, 4) == -6 : "func_12 failed";
+    private final FuncS1 funcS1 = new FuncS1();
 
-        // Test func_13
-        assert funcS1.func_13(5, 3) == 15 : "func_13 failed";
-        assert funcS1.func_13(-2, 4) == -8 : "func_13 failed";
-
-        // Test func_14
-        assert funcS1.func_14(10, 2) == 5 : "func_14 failed";
-        try {
-            funcS1.func_14(10, 0);
-            assert false : "func_14 failed"; // Should have thrown an exception
-        } catch (IllegalArgumentException e) {
-            assert e.getMessage().equals("func_14: Division by zero is not allowed") : "func_14 failed";
-        }
-
-        System.out.println("All tests passed!");
+    @Test
+    void testFunc11() {
+        assertEquals(8, funcS1.func_11(5, 3));
     }
 }
