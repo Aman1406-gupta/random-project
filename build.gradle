@@ -250,9 +250,7 @@ suiteNames.each { suiteName ->
         useJUnitPlatform()
 
         filter {
-            includeTestsMatching(
-                    "${suitePackage}.${suiteName}"
-            )
+            includeTestsMatching("${suitePackage}.${suiteName}")
         }
 
         ignoreFailures = true
@@ -275,41 +273,12 @@ suiteNames.each { suiteName ->
     }
 }
 
-//tasks.register('mergeSuiteReports') {
-//
-//    dependsOn 'testSuite1', 'testSuite2'
-//
-//    doLast {
-//
-//        mergeSuiteXml(
-//                'Suite1',
-//                file("$buildDir/test-results/testSuite1"),
-//                file("$buildDir/test-results/timestamps/suite1.json"),
-//                file("$mergedSuiteDir/Suite1.xml")
-//        )
-//
-//        mergeSuiteXml(
-//                'Suite2',
-//                file("$buildDir/test-results/testSuite2"),
-//                file("$buildDir/test-results/timestamps/suite2.json"),
-//                file("$mergedSuiteDir/Suite2.xml")
-//        )
-//
-//        println "Merged reports written to $mergedSuiteDir"
-//    }
-//}
-
 tasks.named('mergeSuiteReports') {
 
     suiteNames.each { suiteName ->
         dependsOn "run${suiteName}"
     }
 }
-
-//tasks.register('runAllTests') {
-//    dependsOn 'testSuite1', 'testSuite2'
-//    finalizedBy 'mergeSuiteReports'
-//}
 
 tasks.register('runAllTests') {
 
