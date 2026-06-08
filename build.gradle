@@ -1,166 +1,6 @@
-//import groovy.xml.XmlUtil
-//
-//plugins {
-//    id 'java'
-//    id 'application'
-//    id 'org.springframework.boot' version '3.5.15-SNAPSHOT'
-//    id 'io.spring.dependency-management' version '1.1.7'
-//}
-//
-//group = 'com.sprinklr'
-//version = '0.0.1-SNAPSHOT'
-//
-//java {
-//    toolchain {
-//        languageVersion = JavaLanguageVersion.of(21)
-//    }
-//}
-//
-//repositories {
-//    mavenCentral()
-//    maven { url = 'https://repo.spring.io/snapshot' }
-//}
-//
-//dependencies {
-//    implementation 'org.springframework.boot:spring-boot-starter'
-//    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-//    testImplementation 'org.junit.jupiter:junit-jupiter'
-//    testImplementation 'org.junit.platform:junit-platform-suite-api'
-//    testRuntimeOnly 'org.junit.platform:junit-platform-suite-engine'
-//    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-//}
-//
-//test {
-//    enabled = false
-//}
-//
-//def suite1RawDir = file("$buildDir/test-results/suite1/raw")
-//def suite2RawDir = file("$buildDir/test-results/suite2/raw")
-//def mergedSuiteDir = file("$buildDir/test-results/suites")
-//
-//def toInt = { val ->
-//    try {
-//        return val == null ? 0 : val.toString().toInteger()
-//    } catch (Exception ignored) {
-//        return 0
-//    }
-//}
-//
-//def toDouble = { val ->
-//    try {
-//        return val == null ? 0d : val.toString().toDouble()
-//    } catch (Exception ignored) {
-//        return 0d
-//    }
-//}
-//
-//def mergeSuiteXml = { String suiteName, File sourceDir, File mergedFile ->
-//    def xmlFiles = fileTree(sourceDir).matching {
-//        include '**/*.xml'
-//    }.files.findAll { it.isFile() }.sort { it.name }
-//
-//    if (xmlFiles.isEmpty()) {
-//        throw new GradleException("No XML files found in ${sourceDir}")
-//    }
-//
-//    def xmlParser = new XmlParser(false, false)
-//    int tests = 0
-//    int failures = 0
-//    int errors = 0
-//    int skipped = 0
-//    double time = 0d
-//    def testcaseFragments = []
-//
-//    xmlFiles.each { File xmlFile ->
-//        def root = xmlParser.parse(xmlFile)
-//
-//        tests += toInt(root.@tests)
-//        failures += toInt(root.@failures)
-//        errors += toInt(root.@errors)
-//        skipped += toInt(root.@skipped)
-//        time += toDouble(root.@time)
-//
-//        root.depthFirst().findAll { it instanceof Node && it.name() == 'testcase' }.each { Node tc ->
-//            def serialized = XmlUtil.serialize(tc).replaceFirst(/<\?xml[^>]*\?>\s*/, '').trim()
-//            testcaseFragments << serialized
-//        }
-//    }
-//
-//    mergedFile.parentFile.mkdirs()
-//    mergedFile.text = """<?xml version="1.0" encoding="UTF-8"?>
-//<testsuite name="${suiteName}" tests="${tests}" failures="${failures}" errors="${errors}" skipped="${skipped}" time="${String.format(Locale.US, '%.3f', time)}">
-//${testcaseFragments.collect { '  ' + it.replaceAll(/(?m)^/, '  ') }.join('\n')}
-//</testsuite>
-//"""
-//}
-//
-//tasks.register('testSuite1', Test) {
-//    group = 'verification'
-//    description = 'Runs Suite1'
-//
-//    useJUnitPlatform()
-//    filter {
-//        includeTestsMatching 'com.sprinklr.randomproject.suites.Suite1'
-//    }
-//
-//    testLogging {
-//        events "passed", "skipped", "failed"
-//    }
-//
-//    reports {
-//        junitXml.required = true
-//        junitXml.outputLocation = suite1RawDir
-//        html.required = true
-//        html.outputLocation = file("$buildDir/reports/tests/suite1")
-//    }
-//}
-//
-//tasks.register('testSuite2', Test) {
-//    group = 'verification'
-//    description = 'Runs Suite2'
-//
-//    useJUnitPlatform()
-//    filter {
-//        includeTestsMatching 'com.sprinklr.randomproject.suites.Suite2'
-//    }
-//
-//    testLogging {
-//        events "passed", "skipped", "failed"
-//    }
-//
-//    reports {
-//        junitXml.required = true
-//        junitXml.outputLocation = suite2RawDir
-//        html.required = true
-//        html.outputLocation = file("$buildDir/reports/tests/suite2")
-//    }
-//}
-//
-//tasks.register('mergeSuiteReports') {
-//    group = 'verification'
-//    description = 'Merges raw test XML into one XML per suite'
-//
-//    dependsOn 'testSuite1', 'testSuite2'
-//
-//    doLast {
-//        mergeSuiteXml('Suite1', suite1RawDir, file("$mergedSuiteDir/Suite1.xml"))
-//        mergeSuiteXml('Suite2', suite2RawDir, file("$mergedSuiteDir/Suite2.xml"))
-//        println "Merged suite XML written to: $mergedSuiteDir"
-//    }
-//}
-//
-//tasks.register('runAllTests') {
-//    group = 'verification'
-//    description = 'Runs all suite tests and generates suite XML reports'
-//    dependsOn 'mergeSuiteReports'
-//}
-//
-//application {
-//    mainClass.set('com.sprinklr.randomproject.RandomProjectApplication')
-//}
-
 import groovy.xml.XmlUtil
-import java.util.Locale
+import java.time.Instant
+import com.fasterxml.jackson.databind.ObjectMapper
 
 plugins {
     id 'java'
@@ -191,7 +31,8 @@ dependencies {
     testImplementation 'org.junit.platform:junit-platform-suite-api'
 
     testRuntimeOnly 'org.junit.platform:junit-platform-suite-engine'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.19.0'
 }
 
 application {
@@ -201,6 +42,22 @@ application {
 test {
     enabled = false
 }
+
+def suitePackage = "com.sprinklr.randomproject.suites"
+
+def suiteDir = file(
+        "src/test/java/com/sprinklr/randomproject/suites"
+)
+
+def suiteNames = suiteDir.listFiles()
+        .findAll {
+            it.name.endsWith(".java")
+        }
+        .collect {
+            it.name.replace(".java", "")
+        }
+
+println "Discovered suites: ${suiteNames}"
 
 def mergedSuiteDir = file("$buildDir/test-results/suites")
 
@@ -220,16 +77,45 @@ def toDouble = { val ->
     }
 }
 
-def mergeSuiteXml = { String suiteName, File sourceDir, File outputFile ->
+def buildTimestampLookup = { Map rawMap ->
+
+    def result = [:]
+
+    rawMap.each { uniqueId, timestamp ->
+
+        def classMatcher = (uniqueId =~ /\[class:(.*?)\]/)
+        def methodMatcher = (uniqueId =~ /\[method:(.*?)\(\)\]/)
+
+        if (classMatcher.find() && methodMatcher.find()) {
+
+            def className = classMatcher.group(1)
+            def methodName = methodMatcher.group(1)
+
+            result["${className}#${methodName}"] = timestamp
+        }
+    }
+
+    return result
+}
+
+def mergeSuiteXml = { String suiteName,
+                      File sourceDir,
+                      File timestampFile,
+                      File outputFile ->
 
     def xmlFiles = fileTree(sourceDir).matching {
         include '**/*.xml'
-    }.files.findAll {
-        it.isFile()
-    }
+    }.files.findAll { it.isFile() }
 
     if (xmlFiles.isEmpty()) {
         throw new GradleException("No XML reports found in ${sourceDir}")
+    }
+
+    def tsMap = [:]
+
+    if (timestampFile.exists()) {
+        def rawMap = new ObjectMapper().readValue(timestampFile, Map)
+        tsMap = buildTimestampLookup(rawMap)
     }
 
     def parser = new XmlParser(false, false)
@@ -240,11 +126,11 @@ def mergeSuiteXml = { String suiteName, File sourceDir, File outputFile ->
     int skipped = 0
     double time = 0d
 
-    def testcases = []
+    def testcaseFragments = []
 
-    xmlFiles.each { file ->
+    xmlFiles.each { xmlFile ->
 
-        def root = parser.parse(file)
+        def root = parser.parse(xmlFile)
 
         tests += toInt(root.@tests)
         failures += toInt(root.@failures)
@@ -252,25 +138,35 @@ def mergeSuiteXml = { String suiteName, File sourceDir, File outputFile ->
         skipped += toInt(root.@skipped)
         time += toDouble(root.@time)
 
-        root.depthFirst()
-                .findAll { it instanceof Node && it.name() == 'testcase' }
-                .each { tc ->
-                    testcases << XmlUtil.serialize(tc)
-                            .replaceFirst(/<\?xml[^>]*\?>\s*/, '')
-                            .trim()
+        root.depthFirst().findAll { it instanceof Node && it.name() == 'testcase' }.each { Node tc ->
+
+                    def className = tc.@classname?.toString()
+                    def methodName = tc.@name?.toString()?.replace("()", "")
+
+                    def key = "${className}#${methodName}"
+
+                    def executionTs = tsMap[key]
+
+                    tc.attributes().put("timestamp_execution", executionTs)
+
+                    testcaseFragments << XmlUtil.serialize(tc).replaceFirst(/<\?xml[^>]*\?>\s*/, '').trim()
                 }
     }
 
     outputFile.parentFile.mkdirs()
 
     outputFile.text = """<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="${suiteName}"
-           tests="${tests}"
-           failures="${failures}"
-           errors="${errors}"
-           skipped="${skipped}"
-           time="${String.format(Locale.US, "%.3f", time)}">
-${testcases.collect { "  " + it }.join("\n")}
+<testsuite
+    suiteName="${suiteName}"
+    timestamp_generation="${Instant.now()}"
+    tests="${tests}"
+    failures="${failures}"
+    errors="${errors}"
+    skipped="${skipped}"
+    time="${String.format(Locale.US, "%.3f", time)}">
+
+${testcaseFragments.collect { "    " + it }.join("\n")}
+
 </testsuite>
 """
 }
@@ -287,6 +183,8 @@ tasks.register('testSuite1', Test) {
     }
 
     ignoreFailures = true
+
+    systemProperty 'timestamp.output.file', "$buildDir/test-results/timestamps/suite1.json"
 
     reports {
         junitXml.required = true
@@ -311,6 +209,8 @@ tasks.register('testSuite2', Test) {
 
     ignoreFailures = true
 
+    systemProperty 'timestamp.output.file', "$buildDir/test-results/timestamps/suite2.json"
+
     reports {
         junitXml.required = true
         html.required = true
@@ -323,30 +223,99 @@ tasks.register('testSuite2', Test) {
 
 tasks.register('mergeSuiteReports') {
 
-    dependsOn 'testSuite1', 'testSuite2'
-
     doLast {
 
-        mergeSuiteXml(
-                'Suite1',
-                file("$buildDir/test-results/testSuite1"),
-                file("$mergedSuiteDir/Suite1.xml")
-        )
+        suiteNames.each { suiteName ->
 
-        mergeSuiteXml(
-                'Suite2',
-                file("$buildDir/test-results/testSuite2"),
-                file("$mergedSuiteDir/Suite2.xml")
-        )
+            mergeSuiteXml(
+                    suiteName,
+                    file("$buildDir/test-results/run${suiteName}"),
+                    file("$buildDir/test-results/timestamps/${suiteName}.json"),
+                    file("$mergedSuiteDir/${suiteName}.xml")
+            )
+        }
 
         println "Merged reports written to $mergedSuiteDir"
     }
 }
 
-tasks.register('runAllTests') {
-//    dependsOn 'mergeSuiteReports'
+suiteNames.each { suiteName ->
 
-    dependsOn 'testSuite1'
-    dependsOn 'testSuite2'
-    finalizedBy mergeSuiteReports
+    tasks.register("run${suiteName}", Test) {
+
+        group = 'verification'
+
+        description = "Runs ${suiteName}"
+
+        useJUnitPlatform()
+
+        filter {
+            includeTestsMatching(
+                    "${suitePackage}.${suiteName}"
+            )
+        }
+
+        ignoreFailures = true
+
+        systemProperty(
+                'timestamp.output.file',
+                "$buildDir/test-results/timestamps/${suiteName}.json"
+        )
+
+        reports {
+            junitXml.required = true
+            html.required = true
+        }
+
+        binaryResultsDirectory.set(
+                layout.buildDirectory.dir(
+                        "test-results/binary/${suiteName}"
+                )
+        )
+    }
+}
+
+//tasks.register('mergeSuiteReports') {
+//
+//    dependsOn 'testSuite1', 'testSuite2'
+//
+//    doLast {
+//
+//        mergeSuiteXml(
+//                'Suite1',
+//                file("$buildDir/test-results/testSuite1"),
+//                file("$buildDir/test-results/timestamps/suite1.json"),
+//                file("$mergedSuiteDir/Suite1.xml")
+//        )
+//
+//        mergeSuiteXml(
+//                'Suite2',
+//                file("$buildDir/test-results/testSuite2"),
+//                file("$buildDir/test-results/timestamps/suite2.json"),
+//                file("$mergedSuiteDir/Suite2.xml")
+//        )
+//
+//        println "Merged reports written to $mergedSuiteDir"
+//    }
+//}
+
+tasks.named('mergeSuiteReports') {
+
+    suiteNames.each { suiteName ->
+        dependsOn "run${suiteName}"
+    }
+}
+
+//tasks.register('runAllTests') {
+//    dependsOn 'testSuite1', 'testSuite2'
+//    finalizedBy 'mergeSuiteReports'
+//}
+
+tasks.register('runAllTests') {
+
+    suiteNames.each { suiteName ->
+        dependsOn "run${suiteName}"
+    }
+
+    finalizedBy 'mergeSuiteReports'
 }
