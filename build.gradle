@@ -1,43 +1,352 @@
+//import groovy.xml.XmlUtil
+//
+//plugins {
+//    id 'java'
+//    id 'application'
+//    id 'org.springframework.boot' version '3.5.15-SNAPSHOT'
+//    id 'io.spring.dependency-management' version '1.1.7'
+//}
+//
+//group = 'com.sprinklr'
+//version = '0.0.1-SNAPSHOT'
+//
+//java {
+//    toolchain {
+//        languageVersion = JavaLanguageVersion.of(21)
+//    }
+//}
+//
+//repositories {
+//    mavenCentral()
+//    maven { url = 'https://repo.spring.io/snapshot' }
+//}
+//
+//dependencies {
+//    implementation 'org.springframework.boot:spring-boot-starter'
+//    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+//    testImplementation 'org.junit.jupiter:junit-jupiter'
+//    testImplementation 'org.junit.platform:junit-platform-suite-api'
+//    testRuntimeOnly 'org.junit.platform:junit-platform-suite-engine'
+//    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+//}
+//
+//test {
+//    enabled = false
+//}
+//
+//def suite1RawDir = file("$buildDir/test-results/suite1/raw")
+//def suite2RawDir = file("$buildDir/test-results/suite2/raw")
+//def mergedSuiteDir = file("$buildDir/test-results/suites")
+//
+//def toInt = { val ->
+//    try {
+//        return val == null ? 0 : val.toString().toInteger()
+//    } catch (Exception ignored) {
+//        return 0
+//    }
+//}
+//
+//def toDouble = { val ->
+//    try {
+//        return val == null ? 0d : val.toString().toDouble()
+//    } catch (Exception ignored) {
+//        return 0d
+//    }
+//}
+//
+//def mergeSuiteXml = { String suiteName, File sourceDir, File mergedFile ->
+//    def xmlFiles = fileTree(sourceDir).matching {
+//        include '**/*.xml'
+//    }.files.findAll { it.isFile() }.sort { it.name }
+//
+//    if (xmlFiles.isEmpty()) {
+//        throw new GradleException("No XML files found in ${sourceDir}")
+//    }
+//
+//    def xmlParser = new XmlParser(false, false)
+//    int tests = 0
+//    int failures = 0
+//    int errors = 0
+//    int skipped = 0
+//    double time = 0d
+//    def testcaseFragments = []
+//
+//    xmlFiles.each { File xmlFile ->
+//        def root = xmlParser.parse(xmlFile)
+//
+//        tests += toInt(root.@tests)
+//        failures += toInt(root.@failures)
+//        errors += toInt(root.@errors)
+//        skipped += toInt(root.@skipped)
+//        time += toDouble(root.@time)
+//
+//        root.depthFirst().findAll { it instanceof Node && it.name() == 'testcase' }.each { Node tc ->
+//            def serialized = XmlUtil.serialize(tc).replaceFirst(/<\?xml[^>]*\?>\s*/, '').trim()
+//            testcaseFragments << serialized
+//        }
+//    }
+//
+//    mergedFile.parentFile.mkdirs()
+//    mergedFile.text = """<?xml version="1.0" encoding="UTF-8"?>
+//<testsuite name="${suiteName}" tests="${tests}" failures="${failures}" errors="${errors}" skipped="${skipped}" time="${String.format(Locale.US, '%.3f', time)}">
+//${testcaseFragments.collect { '  ' + it.replaceAll(/(?m)^/, '  ') }.join('\n')}
+//</testsuite>
+//"""
+//}
+//
+//tasks.register('testSuite1', Test) {
+//    group = 'verification'
+//    description = 'Runs Suite1'
+//
+//    useJUnitPlatform()
+//    filter {
+//        includeTestsMatching 'com.sprinklr.randomproject.suites.Suite1'
+//    }
+//
+//    testLogging {
+//        events "passed", "skipped", "failed"
+//    }
+//
+//    reports {
+//        junitXml.required = true
+//        junitXml.outputLocation = suite1RawDir
+//        html.required = true
+//        html.outputLocation = file("$buildDir/reports/tests/suite1")
+//    }
+//}
+//
+//tasks.register('testSuite2', Test) {
+//    group = 'verification'
+//    description = 'Runs Suite2'
+//
+//    useJUnitPlatform()
+//    filter {
+//        includeTestsMatching 'com.sprinklr.randomproject.suites.Suite2'
+//    }
+//
+//    testLogging {
+//        events "passed", "skipped", "failed"
+//    }
+//
+//    reports {
+//        junitXml.required = true
+//        junitXml.outputLocation = suite2RawDir
+//        html.required = true
+//        html.outputLocation = file("$buildDir/reports/tests/suite2")
+//    }
+//}
+//
+//tasks.register('mergeSuiteReports') {
+//    group = 'verification'
+//    description = 'Merges raw test XML into one XML per suite'
+//
+//    dependsOn 'testSuite1', 'testSuite2'
+//
+//    doLast {
+//        mergeSuiteXml('Suite1', suite1RawDir, file("$mergedSuiteDir/Suite1.xml"))
+//        mergeSuiteXml('Suite2', suite2RawDir, file("$mergedSuiteDir/Suite2.xml"))
+//        println "Merged suite XML written to: $mergedSuiteDir"
+//    }
+//}
+//
+//tasks.register('runAllTests') {
+//    group = 'verification'
+//    description = 'Runs all suite tests and generates suite XML reports'
+//    dependsOn 'mergeSuiteReports'
+//}
+//
+//application {
+//    mainClass.set('com.sprinklr.randomproject.RandomProjectApplication')
+//}
+
+import groovy.xml.XmlUtil
+import java.util.Locale
+
 plugins {
-	id 'java'
+    id 'java'
     id 'application'
-	id 'org.springframework.boot' version '3.5.15-SNAPSHOT'
-	id 'io.spring.dependency-management' version '1.1.7'
+    id 'org.springframework.boot' version '3.5.15-SNAPSHOT'
+    id 'io.spring.dependency-management' version '1.1.7'
 }
 
 group = 'com.sprinklr'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
-	}
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }
 
 repositories {
-	mavenCentral()
-	maven { url = 'https://repo.spring.io/snapshot' }
+    mavenCentral()
+    maven { url = 'https://repo.spring.io/snapshot' }
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-//    testImplementationplatform('org.junit:junit-bom:5.10.2')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-}
+    implementation 'org.springframework.boot:spring-boot-starter'
 
-tasks.named('test') {
-	useJUnitPlatform()
-    testLogging {
-        events "passed", "skipped", "failed"
-    }
-    reports {
-        junitXml.required = true
-        html.required = true
-    }
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'org.junit.platform:junit-platform-suite-api'
+
+    testRuntimeOnly 'org.junit.platform:junit-platform-suite-engine'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 application {
     mainClass.set('com.sprinklr.randomproject.RandomProjectApplication')
+}
+
+test {
+    enabled = false
+}
+
+def mergedSuiteDir = file("$buildDir/test-results/suites")
+
+def toInt = { val ->
+    try {
+        return val?.toString()?.toInteger() ?: 0
+    } catch (Exception ignored) {
+        return 0
+    }
+}
+
+def toDouble = { val ->
+    try {
+        return val?.toString()?.toDouble() ?: 0d
+    } catch (Exception ignored) {
+        return 0d
+    }
+}
+
+def mergeSuiteXml = { String suiteName, File sourceDir, File outputFile ->
+
+    def xmlFiles = fileTree(sourceDir).matching {
+        include '**/*.xml'
+    }.files.findAll {
+        it.isFile()
+    }
+
+    if (xmlFiles.isEmpty()) {
+        throw new GradleException("No XML reports found in ${sourceDir}")
+    }
+
+    def parser = new XmlParser(false, false)
+
+    int tests = 0
+    int failures = 0
+    int errors = 0
+    int skipped = 0
+    double time = 0d
+
+    def testcases = []
+
+    xmlFiles.each { file ->
+
+        def root = parser.parse(file)
+
+        tests += toInt(root.@tests)
+        failures += toInt(root.@failures)
+        errors += toInt(root.@errors)
+        skipped += toInt(root.@skipped)
+        time += toDouble(root.@time)
+
+        root.depthFirst()
+                .findAll { it instanceof Node && it.name() == 'testcase' }
+                .each { tc ->
+                    testcases << XmlUtil.serialize(tc)
+                            .replaceFirst(/<\?xml[^>]*\?>\s*/, '')
+                            .trim()
+                }
+    }
+
+    outputFile.parentFile.mkdirs()
+
+    outputFile.text = """<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="${suiteName}"
+           tests="${tests}"
+           failures="${failures}"
+           errors="${errors}"
+           skipped="${skipped}"
+           time="${String.format(Locale.US, "%.3f", time)}">
+${testcases.collect { "  " + it }.join("\n")}
+</testsuite>
+"""
+}
+
+tasks.register('testSuite1', Test) {
+
+    group = 'verification'
+    description = 'Runs Suite1'
+
+    useJUnitPlatform()
+
+    filter {
+        includeTestsMatching 'com.sprinklr.randomproject.suites.Suite1'
+    }
+
+    ignoreFailures = true
+
+    reports {
+        junitXml.required = true
+        html.required = true
+    }
+
+    binaryResultsDirectory.set(
+            layout.buildDirectory.dir("test-results/binary/suite1")
+    )
+}
+
+tasks.register('testSuite2', Test) {
+
+    group = 'verification'
+    description = 'Runs Suite2'
+
+    useJUnitPlatform()
+
+    filter {
+        includeTestsMatching 'com.sprinklr.randomproject.suites.Suite2'
+    }
+
+    ignoreFailures = true
+
+    reports {
+        junitXml.required = true
+        html.required = true
+    }
+
+    binaryResultsDirectory.set(
+            layout.buildDirectory.dir("test-results/binary/suite2")
+    )
+}
+
+tasks.register('mergeSuiteReports') {
+
+    dependsOn 'testSuite1', 'testSuite2'
+
+    doLast {
+
+        mergeSuiteXml(
+                'Suite1',
+                file("$buildDir/test-results/testSuite1"),
+                file("$mergedSuiteDir/Suite1.xml")
+        )
+
+        mergeSuiteXml(
+                'Suite2',
+                file("$buildDir/test-results/testSuite2"),
+                file("$mergedSuiteDir/Suite2.xml")
+        )
+
+        println "Merged reports written to $mergedSuiteDir"
+    }
+}
+
+tasks.register('runAllTests') {
+//    dependsOn 'mergeSuiteReports'
+
+    dependsOn 'testSuite1'
+    dependsOn 'testSuite2'
+    finalizedBy mergeSuiteReports
 }
