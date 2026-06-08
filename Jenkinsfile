@@ -25,6 +25,8 @@ pipeline {
                     COMMIT_ID=$(git rev-parse HEAD)
                     TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
+                    ls -la metadata
+
                     cat > metadata/suite1-metadata.json <<EOF
         {
           "repositoryUrl": "$REPOSITORY_URL",
