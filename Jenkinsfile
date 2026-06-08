@@ -18,12 +18,12 @@ pipeline {
         stage('Collect Metadata') {
             steps {
                 sh '''
-                    mkdir -p metadata
+        mkdir -p metadata
 
-                    REPOSITORY_URL=$(git config --get remote.origin.url)
-                    BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
-                    COMMIT_ID=$(git rev-parse HEAD)
-                    TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+        REPOSITORY_URL=$(git config --get remote.origin.url)
+        BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
+        COMMIT_ID=$(git rev-parse HEAD)
+        TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
         cat > metadata/suite1-metadata.json <<EOF
         {
@@ -51,8 +51,8 @@ pipeline {
         }
         EOF
 
-                    echo "=== Metadata Directory ==="
-                    ls -la metadata
+        echo "=== Metadata Directory ==="
+        ls -la metadata
                 '''
             }
         }
