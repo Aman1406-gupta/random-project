@@ -25,31 +25,31 @@ pipeline {
                     COMMIT_ID=$(git rev-parse HEAD)
                     TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
-                    cat > metadata/suite1-metadata.json <<EOF
-                    {
-                      "repositoryUrl": "$REPOSITORY_URL",
-                      "branchName": "$BRANCH_NAME",
-                      "commitID": "$COMMIT_ID",
-                      "buildID": "$BUILD_ID",
-                      "jobName": "$JOB_NAME",
-                      "buildUrl": "$BUILD_URL",
-                      "testReportPath": "build/test-results/suites/Suite1.xml",
-                      "timestamp_generation": "$TIMESTAMP"
-                    }
-                    EOF
+        cat > metadata/suite1-metadata.json <<EOF
+        {
+          "repositoryUrl": "$REPOSITORY_URL",
+          "branchName": "$BRANCH_NAME",
+          "commitID": "$COMMIT_ID",
+          "buildID": "$BUILD_ID",
+          "jobName": "$JOB_NAME",
+          "buildUrl": "$BUILD_URL",
+          "testReportPath": "build/test-results/suites/Suite1.xml",
+          "timestamp_generation": "$TIMESTAMP"
+        }
+        EOF
 
-                                cat > metadata/suite2-metadata.json <<EOF
-                    {
-                      "repositoryUrl": "$REPOSITORY_URL",
-                      "branchName": "$BRANCH_NAME",
-                      "commitID": "$COMMIT_ID",
-                      "buildID": "$BUILD_ID",
-                      "jobName": "$JOB_NAME",
-                      "buildUrl": "$BUILD_URL",
-                      "testReportPath": "build/test-results/suites/Suite2.xml",
-                      "timestamp_generation": "$TIMESTAMP"
-                    }
-                    EOF
+        cat > metadata/suite2-metadata.json <<EOF
+        {
+          "repositoryUrl": "$REPOSITORY_URL",
+          "branchName": "$BRANCH_NAME",
+          "commitID": "$COMMIT_ID",
+          "buildID": "$BUILD_ID",
+          "jobName": "$JOB_NAME",
+          "buildUrl": "$BUILD_URL",
+          "testReportPath": "build/test-results/suites/Suite2.xml",
+          "timestamp_generation": "$TIMESTAMP"
+        }
+        EOF
 
                     echo "=== Metadata Directory ==="
                     ls -la metadata
