@@ -17,17 +17,29 @@ pipeline {
         stage('Collect Metadata') {
             steps {
                 sh '''
-                mkdir -p metadata
+                REPORT_DIR="build/test-results/suites"
+                METADATA_DIR="metadata"
 
-                # Define shell variables
-                REPOSITORY_URL=$(git config --get remote.origin.url)
-                BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
-                COMMIT_ID=$(git rev-parse HEAD)
-                TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+                mkdir -p "$METADATA_DIR"
 
-                # Create Suite 1 Metadata
-                # Using <<EOF without quotes allows the shell to expand the variables above
-                cat > metadata/suite1-metadata.json <<EOF
+                if [ ! -d "$REPORT_DIR" ]; then
+                    echo "WARNING: Report directory $REPORT_DIR not found. Skipping metadata generation."
+                    exit 0
+                fi
+
+                REPOSITORY_URL=$(git config --get remote.origin.url || echo "unknown")
+                BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD || echo "unknown")
+                COMMIT_ID=$(git rev-parse HEAD || echo "unknown")
+
+                for report_file in "$REPORT_DIR"/*.xml; do
+
+                    [ -f "$report_file" ] || continue
+                    SUITE_NAME=$(basename "$report_file" .xml)
+                    TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+                    echo "Generating metadata for: $SUITE_NAME"
+
+                    cat > "$METADATA_DIR/${SUITE_NAME}-metadata.json" <<EOF
 {
   "repositoryUrl": "$REPOSITORY_URL",
   "branchName": "$BRANCH_NAME",
@@ -35,27 +47,13 @@ pipeline {
   "buildID": "$BUILD_ID",
   "jobName": "$JOB_NAME",
   "buildUrl": "$BUILD_URL",
-  "testReportPath": "build/test-results/suites/Suite1.xml",
+  "testReportPath": "$report_file",
   "timestamp_generation": "$TIMESTAMP"
 }
 EOF
+                done
 
-                # Create Suite 2 Metadata
-                cat > metadata/suite2-metadata.json <<EOF
-{
-  "repositoryUrl": "$REPOSITORY_URL",
-  "branchName": "$BRANCH_NAME",
-  "commitID": "$COMMIT_ID",
-  "buildID": "$BUILD_ID",
-  "jobName": "$JOB_NAME",
-  "buildUrl": "$BUILD_URL",
-  "testReportPath": "build/test-results/suites/Suite2.xml",
-  "timestamp_generation": "$TIMESTAMP"
-}
-EOF
-
-                echo "=== Metadata Directory ==="
-                ls -la metadata
+                echo "=== Successfully Generated $(ls -1 "$METADATA_DIR" | wc -l) Metadata Files ==="
                 '''
             }
         }
