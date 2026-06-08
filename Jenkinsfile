@@ -20,13 +20,36 @@ pipeline {
                 sh '''
                     mkdir -p metadata
 
-                    echo BUILD_ID=$BUILD_ID > metadata/build-info.txt
-                    echo JOB_NAME=$JOB_NAME >> metadata/build-info.txt
-                    echo BUILD_URL=$BUILD_URL >> metadata/build-info.txt
+                    REPOSITORY_URL=$(git config --get remote.origin.url)
+                    BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
+                    COMMIT_ID=$(git rev-parse HEAD)
+                    TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
-                    git rev-parse HEAD > metadata/commit.txt
-                    git rev-parse --abbrev-ref HEAD > metadata/branch.txt
-                    git config --get remote.origin.url > metadata/repo.txt
+                    cat > metadata/suite1-metadata.json <<EOF
+        {
+          "repositoryUrl": "$REPOSITORY_URL",
+          "branchName": "$BRANCH_NAME",
+          "commitID": "$COMMIT_ID",
+          "buildID": "$BUILD_ID",
+          "jobName": "$JOB_NAME",
+          "buildUrl": "$BUILD_URL",
+          "testReportPath": "build/test-results/suites/Suite1.xml",
+          "timestamp_generation": "$TIMESTAMP"
+        }
+        EOF
+
+                    cat > metadata/suite2-metadata.json <<EOF
+        {
+          "repositoryUrl": "$REPOSITORY_URL",
+          "branchName": "$BRANCH_NAME",
+          "commitID": "$COMMIT_ID",
+          "buildID": "$BUILD_ID",
+          "jobName": "$JOB_NAME",
+          "buildUrl": "$BUILD_URL",
+          "testReportPath": "build/test-results/suites/Suite2.xml",
+          "timestamp_generation": "$TIMESTAMP"
+        }
+        EOF
                 '''
             }
         }
