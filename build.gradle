@@ -140,14 +140,15 @@ def mergeSuiteXml = { String suiteName,
 
         root.depthFirst().findAll { it instanceof Node && it.name() == 'testcase' }.each { Node tc ->
 
+                    def testID = "${className}#${methodName}"
                     def className = tc.@classname?.toString()
                     def methodName = tc.@name?.toString()?.replace("()", "")
 
-                    def key = "${className}#${methodName}"
-
-                    def executionTs = tsMap[key]
+                    def executionTs = tsMap[testID]
 
                     tc.attributes().put("timestamp_execution", executionTs)
+                    tc.attributes().put("methodname", methodName)
+                    tc.attributes().put("testID", testID)
 
                     testcaseFragments << XmlUtil.serialize(tc).replaceFirst(/<\?xml[^>]*\?>\s*/, '').trim()
                 }
@@ -158,7 +159,6 @@ def mergeSuiteXml = { String suiteName,
     outputFile.text = """<?xml version="1.0" encoding="UTF-8"?>
 <testsuite
     suiteName="${suiteName}"
-    timestamp_generation="${Instant.now()}"
     tests="${tests}"
     failures="${failures}"
     errors="${errors}"
@@ -169,56 +169,6 @@ ${testcaseFragments.collect { "    " + it }.join("\n")}
 
 </testsuite>
 """
-}
-
-tasks.register('testSuite1', Test) {
-
-    group = 'verification'
-    description = 'Runs Suite1'
-
-    useJUnitPlatform()
-
-    filter {
-        includeTestsMatching 'com.sprinklr.randomproject.suites.Suite1'
-    }
-
-    ignoreFailures = true
-
-    systemProperty 'timestamp.output.file', "$buildDir/test-results/timestamps/suite1.json"
-
-    reports {
-        junitXml.required = true
-        html.required = true
-    }
-
-    binaryResultsDirectory.set(
-            layout.buildDirectory.dir("test-results/binary/suite1")
-    )
-}
-
-tasks.register('testSuite2', Test) {
-
-    group = 'verification'
-    description = 'Runs Suite2'
-
-    useJUnitPlatform()
-
-    filter {
-        includeTestsMatching 'com.sprinklr.randomproject.suites.Suite2'
-    }
-
-    ignoreFailures = true
-
-    systemProperty 'timestamp.output.file', "$buildDir/test-results/timestamps/suite2.json"
-
-    reports {
-        junitXml.required = true
-        html.required = true
-    }
-
-    binaryResultsDirectory.set(
-            layout.buildDirectory.dir("test-results/binary/suite2")
-    )
 }
 
 tasks.register('mergeSuiteReports') {

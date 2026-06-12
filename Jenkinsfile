@@ -14,7 +14,7 @@ pipeline {
             }
         }
 
-        stage('Collect Metadata') {
+        stage('Collect Build Metadata') {
             steps {
                 sh '''
                 REPORT_DIR="build/test-results/suites"
@@ -29,13 +29,13 @@ pipeline {
 
                 REPOSITORY_URL=$(git config --get remote.origin.url || echo "unknown")
                 BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD || echo "unknown")
-                COMMIT_ID=$(git rev-parse HEAD || echo "unknown")
+                COMMIT_SHA=$(git rev-parse HEAD || echo "unknown")
+                TIMESTAMP_GENERATION=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
                 for report_file in "$REPORT_DIR"/*.xml; do
 
                     [ -f "$report_file" ] || continue
                     SUITE_NAME=$(basename "$report_file" .xml)
-                    TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
                     echo "Generating metadata for: $SUITE_NAME"
 
@@ -43,12 +43,12 @@ pipeline {
 {
   "repositoryUrl": "$REPOSITORY_URL",
   "branchName": "$BRANCH_NAME",
-  "commitID": "$COMMIT_ID",
+  "commitSha": "$COMMIT_SHA",
   "buildID": "$BUILD_ID",
   "jobName": "$JOB_NAME",
   "buildUrl": "$BUILD_URL",
   "testReportPath": "$report_file",
-  "timestamp_generation": "$TIMESTAMP"
+  "timestamp_generation": "$TIMESTAMP_GENERATION"
 }
 EOF
                 done
@@ -60,7 +60,7 @@ EOF
 
         stage('Archive Reports') {
             steps {
-                archiveArtifacts artifacts: 'build/test-results/suites/*.xml, metadata/*'
+                archiveArtifacts artifacts: 'build/test-results/suites/*.xml, metadata/*.json'
             }
         }
     }

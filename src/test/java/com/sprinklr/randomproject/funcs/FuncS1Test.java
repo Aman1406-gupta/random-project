@@ -18,12 +18,6 @@ public class FuncS1Test {
      Failing tests offset the expected value by +1 to force assertion failure.
     */
 
-    // Helper: failing index sets (absolute indices from 1..272)
-    // Owner One failures: 5,13,21,29,37,45,53,61
-    // Owner Two failures: 72,80,88,96,104,112,120,128,136
-    // Owner Three failures: 142,151,160,169,178,187,196
-    // Owner Four failures: 206,213,220,227,234,241,248,255,262,270
-
     @Test
     @Owner("Owner One")
     void testFunc1_001() {
