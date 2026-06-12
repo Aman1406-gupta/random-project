@@ -140,9 +140,9 @@ def mergeSuiteXml = { String suiteName,
 
         root.depthFirst().findAll { it instanceof Node && it.name() == 'testcase' }.each { Node tc ->
 
-                    def testID = "${className}#${methodName}"
                     def className = tc.@classname?.toString()
                     def methodName = tc.@name?.toString()?.replace("()", "")
+                    def testID = "${className}#${methodName}"
 
                     def executionTs = tsMap[testID]
 
