@@ -112,6 +112,7 @@ for root, dirs, files in os.walk(ROOT):
                 created_at = None
 
             results.append({
+                "testId": f"{class_name}#{method.name}",
                 "className": class_name,
                 "methodName": method.name,
                 "testCaseFilePath": path,
