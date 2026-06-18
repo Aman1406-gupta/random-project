@@ -4,12 +4,13 @@ import re
 import json
 import xml.etree.ElementTree as ET
 
-if len(sys.argv) < 3:
-    print("Usage: python generate_suite_xml.py <report_dir> <output_dir>")
+if len(sys.argv) < 4:
+    print("Usage: python generate_suite_xml.py <report_dir> <output_dir> <timestamp_json_path>")
     sys.exit(1)
 
 report_dir = sys.argv[1]
 output_dir = sys.argv[2]
+timestamp_json_path = sys.argv[3]
 
 SUITE_SRC_DIR = os.path.join("src", "test", "java")
 os.makedirs(output_dir, exist_ok=True)
@@ -20,6 +21,21 @@ branch_name = os.environ.get("BRANCH_NAME", "unknown")
 timestamp_generation = os.environ.get("TIMESTAMP_GENERATION", "unknown")
 job_name = os.environ.get("JOB_NAME", "unknown")
 build_url = os.environ.get("BUILD_URL", "unknown")
+
+timestamp_map = {}
+try:
+    if os.path.exists(timestamp_json_path):
+        with open(timestamp_json_path, "r", encoding="utf-8") as jf:
+            raw_timestamps = json.load(jf)
+            for unique_id, timestamp in raw_timestamps.items():
+                class_match = re.search(r'\[class:([^\]]+)\]', unique_id)
+                method_match = re.search(r'\[method:([^\]\(]+)', unique_id)
+                if class_match and method_match:
+                    full_class = class_match.group(1)
+                    method = method_match.group(1)
+                    timestamp_map[f"{full_class}#{method}"] = timestamp
+except Exception as e:
+    print(f"Warning: Could not process listener timestamps: {e}")
 
 def extract_classes_from_suite(file_path):
     with open(file_path, "r", encoding="utf-8") as f:
@@ -82,6 +98,12 @@ for suite_name, targeted_classes in suite_mappings.items():
 
                             seen_methods.add(unique_method_sig)
                             tc.set("classname", full_class_path)
+                            tc.set("methodname", clean_name)
+
+                            if unique_method_sig in timestamp_map:
+                                tc.set("timestamp_execution", timestamp_map[unique_method_sig])
+                            else:
+                                tc.set("timestamp_execution", xml_root.get("timestamp", ""))
 
                             if "name" in tc.attrib:
                                 del tc.attrib["name"]

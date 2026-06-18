@@ -41,7 +41,8 @@ pipeline {
 
                 python3 scripts/generate_suite_xml.py \
                     "$REPORT_DIR" \
-                    "$SUITE_DIR"
+                    "$SUITE_DIR" \
+                    "build/test-results/metadata/execution-timestamps.json" \
                 '''
             }
         }
