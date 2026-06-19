@@ -21,7 +21,7 @@ public class FuncS1Test {
     @Test
     @Owner("Owner One")
     void testFunc1_001() {
-        int i = 11;
+        int i = 1;
         int a = 10 + (i % 11);
         int b = 1 + (i % 7);
         assertEquals(a + b, funcS1.func_11(a, b));
@@ -30,7 +30,7 @@ public class FuncS1Test {
     @Test
     @Owner("Owner One")
     void testFunc1_002() {
-        int i = 12;
+        int i = 2;
         int a = 10 + (i % 11);
         int b = 1 + (i % 7);
         assertEquals(a - b, funcS1.func_12(a, b));
@@ -39,7 +39,7 @@ public class FuncS1Test {
     @Test
     @Owner("Owner One")
     void testFunc1_003() {
-        int i = 13;
+        int i =3;
         int a = 10 + (i % 11);
         int b = 1 + (i % 7);
         assertEquals(a * b, funcS1.func_13(a, b));
@@ -48,7 +48,7 @@ public class FuncS1Test {
     @Test
     @Owner("Owner One")
     void testFunc1_004() {
-        int i = 14;
+        int i = 4;
         int a = 10 + (i % 11);
         int b = 1 + (i % 7);
         assertEquals(a / b, funcS1.func_14(a, b));
