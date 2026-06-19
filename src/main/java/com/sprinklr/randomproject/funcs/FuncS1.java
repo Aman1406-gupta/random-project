@@ -14,9 +14,6 @@ public class FuncS1 {
     }
 
     public int func_13(int a, int b) {
-        if (a == 13 & b == 4){
-            return 0;
-        }
         int result = a * b;
         System.out.println("func_13: " + a + " * " + b + " = " + result);
         return result;
