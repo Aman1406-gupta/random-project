@@ -21,21 +21,20 @@ public class FuncS1Test {
     @Test
     @Owner("Owner One")
     void testFunc1_001() {
-        int i = 1;
+        int i = 11;
         int a = 10 + (i % 11);
         int b = 1 + (i % 7);
         assertEquals(a + b, funcS1.func_11(a, b));
     }
 
     @Test
-    @Owner("Owner One")
-    void testFunc1_002() {
+    @Owner("Owner Five")
+    void testFunc1_300() {
         int i = 2;
         int a = 10 + (i % 11);
         int b = 1 + (i % 7);
         assertEquals(a - b, funcS1.func_12(a, b));
     }
-
 
     @Test
     @Owner("Owner One")
@@ -46,6 +45,7 @@ public class FuncS1Test {
         assertEquals(a * b, funcS1.func_13(a, b));
     }
 
+    
     @Test
     @Owner("Owner One")
     void testFunc1_004() {
