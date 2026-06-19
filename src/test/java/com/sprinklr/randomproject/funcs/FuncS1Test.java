@@ -36,7 +36,6 @@ public class FuncS1Test {
         assertEquals(a - b, funcS1.func_12(a, b));
     }
 
-
     @Test
     @Owner("Owner One")
     void testFunc1_003() {
