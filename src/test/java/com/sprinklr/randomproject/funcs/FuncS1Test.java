@@ -29,7 +29,7 @@ public class FuncS1Test {
 
     @Test
     @Owner("Owner One")
-    void testFunc1_300() {
+    void testFunc1_002() {
         int i = 2;
         int a = 10 + (i % 11);
         int b = 1 + (i % 7);
