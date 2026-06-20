@@ -28,7 +28,14 @@ def extract_classes_from_suite(file_path):
     compact_content = re.sub(r'\s+', '', content)
     match = re.search(r'@(?:SuiteClasses|SelectClasses)\(\{([^}]+)\}\)', compact_content)
     if not match: return []
-    return [c.split('.')[-1] for c in match.group(1).split(',')]
+
+    raw_elements = match.group(1).split(',')
+    classes = []
+    for c in raw_elements:
+        cleaned = c.replace('.class', '').strip()
+        if cleaned:
+            classes.append(cleaned.split('.')[-1])
+    return classes
 
 allowed_class_names = []
 if filter_suite_name:
@@ -38,13 +45,16 @@ if filter_suite_name:
                 allowed_class_names = extract_classes_from_suite(os.path.join(r, f))
                 break
 
+print(f"Targeting specific classes for evaluation: {allowed_class_names}")
+
 for root, dirs, files in os.walk(ROOT):
     for file in files:
-        if not file.endswith(".java") or file.startswith("RandomprojectApplicationTests"):
+        if not file.endswith(".java") or file.startswith("RandomprojectApplicationTests") or file == f"{filter_suite_name}.java":
             continue
 
         class_name = file.replace(".java", "")
 
+        # Verify strict matching rules apply
         if filter_suite_name and class_name not in allowed_class_names:
             continue
 
@@ -120,3 +130,4 @@ os.makedirs("build/test-results/metadata", exist_ok=True)
 out_path = f"build/test-results/metadata/test-info-{filter_suite_name}.json" if filter_suite_name else "build/test-results/metadata/test-info.json"
 with open(out_path, "w") as f:
     json.dump(results, f, indent=2)
+print(f"Processing complete. Tracked metadata metrics inside: {out_path}")
