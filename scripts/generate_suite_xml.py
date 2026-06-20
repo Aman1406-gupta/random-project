@@ -5,12 +5,13 @@ import json
 import xml.etree.ElementTree as ET
 
 if len(sys.argv) < 4:
-    print("Usage: python generate_suite_xml.py <report_dir> <output_dir> <timestamp_json_path>")
+    print("Usage: python generate_suite_xml.py <report_dir> <output_dir> <timestamp_json_path> [suite_name]")
     sys.exit(1)
 
 report_dir = sys.argv[1]
 output_dir = sys.argv[2]
 timestamp_json_path = sys.argv[3]
+filter_suite_name = sys.argv[4] if len(sys.argv) > 4 else None
 
 SUITE_SRC_DIR = os.path.join("src", "test", "java")
 os.makedirs(output_dir, exist_ok=True)
@@ -20,7 +21,6 @@ repository_url = os.environ.get("REPOSITORY_URL", "unknown")
 branch_name = os.environ.get("BRANCH_NAME", "unknown")
 timestamp_generation = os.environ.get("TIMESTAMP_GENERATION", "unknown")
 job_name = os.environ.get("JOB_NAME", "unknown")
-build_url = os.environ.get("BUILD_URL", "unknown")
 
 timestamp_map = {}
 try:
@@ -31,9 +31,7 @@ try:
                 class_match = re.search(r'\[class:([^\]]+)\]', unique_id)
                 method_match = re.search(r'\[method:([^\]\(]+)', unique_id)
                 if class_match and method_match:
-                    full_class = class_match.group(1)
-                    method = method_match.group(1)
-                    timestamp_map[f"{full_class}#{method}"] = timestamp
+                    timestamp_map[f"{class_match.group(1)}#{method_match.group(1)}"] = timestamp
 except Exception as e:
     print(f"Warning: Could not process listener timestamps: {e}")
 
@@ -44,21 +42,18 @@ def extract_classes_from_suite(file_path):
     match = re.search(r'@(?:SuiteClasses|SelectClasses)\(\{([^}]+)\}\)', compact_content)
     if not match:
         return []
-
-    raw_elements = match.group(1).split(',')
-    full_classes = []
-    for c in raw_elements:
-        c = c.replace('.class', '').strip()
-        full_classes.append(c)
-    return full_classes
+    return [c.replace('.class', '').strip() for c in match.group(1).split(',')]
 
 suite_mappings = {}
 for root, _, files in os.walk(SUITE_SRC_DIR):
     for file in files:
         if file.endswith(".java") and "Suite" in file:
             suite_name = file.replace(".java", "")
-            full_path = os.path.join(root, file)
-            targeted_classes = extract_classes_from_suite(full_path)
+
+            if filter_suite_name and suite_name != filter_suite_name:
+                continue
+
+            targeted_classes = extract_classes_from_suite(os.path.join(root, file))
             if targeted_classes:
                 suite_mappings[suite_name] = targeted_classes
 
@@ -86,7 +81,6 @@ for suite_name, targeted_classes in suite_mappings.items():
                     try:
                         tree = ET.parse(src_file)
                         xml_root = tree.getroot()
-
                         testcases = xml_root.findall(".//testcase")
                         for tc in testcases:
                             t_name = tc.get("name", "")
@@ -100,19 +94,13 @@ for suite_name, targeted_classes in suite_mappings.items():
                             tc.set("classname", full_class_path)
                             tc.set("methodname", clean_name)
 
-                            if unique_method_sig in timestamp_map:
-                                tc.set("timestamp_execution", timestamp_map[unique_method_sig])
-                            else:
-                                tc.set("timestamp_execution", xml_root.get("timestamp", ""))
+                            tc.set("timestamp_execution", timestamp_map.get(unique_method_sig, xml_root.get("timestamp", "")))
 
-                            if "name" in tc.attrib:
-                                del tc.attrib["name"]
-                            if "testID" in tc.attrib:
-                                del tc.attrib["testID"]
+                            if "name" in tc.attrib: del tc.attrib["name"]
+                            if "testID" in tc.attrib: del tc.attrib["testID"]
 
                             class_element.append(tc)
                             class_has_cases = True
-
                     except Exception as e:
                         print(f"Error compiling XML {src_file}: {e}")
 

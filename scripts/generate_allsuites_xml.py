@@ -5,7 +5,7 @@ import json
 import xml.etree.ElementTree as ET
 
 if len(sys.argv) < 4:
-    print("Usage: python generate_suite_xml_s.py <report_dir> <output_dir> <timestamp_json_path> [suite_name]")
+    print("Usage: python generate_allsuites_xml.py <report_dir> <output_dir> <timestamp_json_path> [suite_name]")
     sys.exit(1)
 
 report_dir = sys.argv[1]
@@ -42,7 +42,14 @@ def extract_classes_from_suite(file_path):
     match = re.search(r'@(?:SuiteClasses|SelectClasses)\(\{([^}]+)\}\)', compact_content)
     if not match:
         return []
-    return [c.replace('.class', '').strip() for c in match.group(1).split(',')]
+
+    raw_elements = match.group(1).split(',')
+    classes = []
+    for c in raw_elements:
+        cleaned = c.replace('.class', '').strip()
+        if cleaned:
+            classes.append(cleaned)
+    return classes
 
 suite_mappings = {}
 for root, _, files in os.walk(SUITE_SRC_DIR):
@@ -57,14 +64,18 @@ for root, _, files in os.walk(SUITE_SRC_DIR):
             if targeted_classes:
                 suite_mappings[suite_name] = targeted_classes
 
+out_file = os.path.join(output_dir, "allsuites.xml")
+generated_blocks = []
+
 for suite_name, targeted_classes in suite_mappings.items():
-    combined_root = ET.Element(
+    current_suite = ET.Element(
         "testsuite",
         suiteName=suite_name,
         buildID=build_id,
         repositoryUrl=repository_url,
         branchName=branch_name,
-        jobName=job_name
+        jobName=job_name,
+        timestampGeneration=timestamp_generation
     )
     files_combined = 0
     seen_methods = set()
@@ -93,7 +104,6 @@ for suite_name, targeted_classes in suite_mappings.items():
                             seen_methods.add(unique_method_sig)
                             tc.set("classname", full_class_path)
                             tc.set("methodname", clean_name)
-
                             tc.set("timestamp_execution", timestamp_map.get(unique_method_sig, xml_root.get("timestamp", "")))
 
                             if "name" in tc.attrib: del tc.attrib["name"]
@@ -105,13 +115,20 @@ for suite_name, targeted_classes in suite_mappings.items():
                         print(f"Error compiling XML {src_file}: {e}")
 
         if class_has_cases:
-            combined_root.append(class_element)
+            current_suite.append(class_element)
             files_combined += 1
 
     if files_combined > 0:
-        out_file = os.path.join(output_dir, f"{suite_name}.xml")
-        combined_tree = ET.ElementTree(combined_root)
         if hasattr(ET, 'indent'):
-            ET.indent(combined_tree, space="  ", level=0)
-        combined_tree.write(out_file, encoding="utf-8", xml_declaration=True)
-        print(f"Successfully generated custom structural XML: {out_file}")
+            ET.indent(current_suite, space="  ", level=0)
+        # Convert element segment directly to a string representation
+        chunk = ET.tostring(current_suite, encoding="utf-8").decode("utf-8")
+        generated_blocks.append(chunk)
+
+if generated_blocks:
+    with open(out_file, "w", encoding="utf-8") as f:
+        f.write("<?xml version='1.0' encoding='utf-8'?>\n")
+        f.write("\n".join(generated_blocks))
+    print(f"Successfully generated plain multi-root structural XML: {out_file}")
+else:
+    print("No matching suite records found to combine.")
