@@ -36,7 +36,6 @@ application {
 
 test {
     useJUnitPlatform()
-    ignoreFailures = true
 
     exclude '**/RandomprojectApplicationTests.class'
 }
