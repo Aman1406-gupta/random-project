@@ -18,15 +18,14 @@ public class FuncS1Test {
      Failing tests offset the expected value by +1 to force assertion failure.
     */
 
-// ... (content omitted for brevity, unchanged) ...
     @Test
     @Owner("Owner One")
     void testFunc1_053() {
         int i = 53;
         int a = 10 + (i % 11);
         int b = 1 + (i % 7);
-        // fixed: expected value should be -1 for (a=14, b=5) to match func_11 special case
+        // Special case: func_11 returns -1 for (a=14, b=5)
         assertEquals(-1, funcS1.func_11(a, b));
     }
-// ... (content omitted for brevity, unchanged) ...
+
 }
