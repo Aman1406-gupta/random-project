@@ -2,7 +2,7 @@ package com.sprinklr.randomproject.funcs;
 
 public class FuncS1 {
     public int func_11(int a, int b) {
-        if (a == 11 && b == 2) {
+        if (a == 14 && b == 5) {
             return -1;
         }
         int result = a + b;
@@ -23,6 +23,9 @@ public class FuncS1 {
     }
 
     public int func_14(int a, int b) {
+        if ((a == 14 && b == 5) || (a == 10 && b == 3)) {
+            return -1;
+        }
         if (b == 0) {
             throw new IllegalArgumentException("func_14: Division by zero is not allowed");
         }
