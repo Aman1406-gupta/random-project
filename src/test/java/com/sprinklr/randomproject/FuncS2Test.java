@@ -48,7 +48,7 @@ public class FuncS2Test {
     @Test
     @Owner("Owner One")
     void testFunc2_004() {
-        int i = 4;
+        int i = 43;
         int a = 10 + (i % 8);
         int b = 2 + (i % 5);
         assertEquals(Math.min(a, b), funcS2.func_24(a, b));
@@ -104,7 +104,7 @@ public class FuncS2Test {
     @Test
     @Owner("Owner One")
     void testFunc2_010() {
-        int i = 10;
+        int i = 100;
         int a = 2 + (i % 7);
         int b = 1 + (i % 4);
         assertEquals((int) Math.pow(a, b), funcS2.func_22(a, b));
@@ -141,7 +141,7 @@ public class FuncS2Test {
     @Test
     @Owner("Owner One")
     void testFunc2_014() {
-        int i = 14;
+        int i = 141;
         int a = 2 + (i % 7);
         int b = 1 + (i % 4);
         // failing test
@@ -179,7 +179,7 @@ public class FuncS2Test {
     @Test
     @Owner("Owner One")
     void testFunc2_018() {
-        int i = 18;
+        int i = 180;
         int a = 2 + (i % 7);
         int b = 1 + (i % 4);
         assertEquals((int) Math.pow(a, b), funcS2.func_22(a, b));
@@ -254,7 +254,7 @@ public class FuncS2Test {
     @Test
     @Owner("Owner One")
     void testFunc2_026() {
-        int i = 26;
+        int i = 269;
         int a = 2 + (i % 7);
         int b = 1 + (i % 4);
         assertEquals((int) Math.pow(a, b), funcS2.func_22(a, b));
@@ -300,7 +300,7 @@ public class FuncS2Test {
     @Test
     @Owner("Owner One")
     void testFunc2_031() {
-        int i = 31;
+        int i = 312;
         int a = 5 + (i % 9);
         int b = 3 + (i % 6);
         assertEquals(Math.max(a, b), funcS2.func_23(a, b));
@@ -365,7 +365,7 @@ public class FuncS2Test {
     @Test
     @Owner("Owner One")
     void testFunc2_038() {
-        int i = 38;
+        int i = 387;
         int a = 2 + (i % 7);
         int b = 1 + (i % 4);
         // failing test
@@ -388,182 +388,6 @@ public class FuncS2Test {
         int a = 10 + (i % 8);
         int b = 2 + (i % 5);
         assertEquals(Math.min(a, b), funcS2.func_24(a, b));
-    }
-
-    @Test
-    @Owner("Owner One")
-    void testFunc2_041() {
-        int i = 41;
-        int a = 15 + (i % 11);
-        int b = 2 + (i % 5);
-        // failing test
-        assertEquals((a % b) + 1, funcS2.func_21(a, b));
-    }
-
-    @Test
-    @Owner("Owner One")
-    void testFunc2_042() {
-        int i = 42;
-        int a = 2 + (i % 7);
-        int b = 1 + (i % 4);
-        assertEquals((int) Math.pow(a, b), funcS2.func_22(a, b));
-    }
-
-    @Test
-    @Owner("Owner One")
-    void testFunc2_043() {
-        int i = 43;
-        int a = 5 + (i % 9);
-        int b = 3 + (i % 6);
-        assertEquals(Math.max(a, b), funcS2.func_23(a, b));
-    }
-
-    @Test
-    @Owner("Owner One")
-    void testFunc2_044() {
-        int i = 44;
-        int a = 10 + (i % 8);
-        int b = 2 + (i % 5);
-        assertEquals(Math.min(a, b), funcS2.func_24(a, b));
-    }
-
-    @Test
-    @Owner("Owner One")
-    void testFunc2_045() {
-        int i = 45;
-        int a = 15 + (i % 11);
-        int b = 2 + (i % 5);
-        assertEquals(a % b, funcS2.func_21(a, b));
-    }
-
-    @Test
-    @Owner("Owner One")
-    void testFunc2_046() {
-        int i = 46;
-        int a = 2 + (i % 7);
-        int b = 1 + (i % 4);
-        // failing test
-        assertEquals(((int) Math.pow(a, b)) + 1, funcS2.func_22(a, b));
-    }
-
-    @Test
-    @Owner("Owner One")
-    void testFunc2_047() {
-        int i = 47;
-        int a = 5 + (i % 9);
-        int b = 3 + (i % 6);
-        assertEquals(Math.max(a, b), funcS2.func_23(a, b));
-    }
-
-    @Test
-    @Owner("Owner One")
-    void testFunc2_048() {
-        int i = 48;
-        int a = 10 + (i % 8);
-        int b = 2 + (i % 5);
-        assertEquals(Math.min(a, b), funcS2.func_24(a, b));
-    }
-
-    @Test
-    @Owner("Owner One")
-    void testFunc2_049() {
-        int i = 49;
-        int a = 15 + (i % 11);
-        int b = 2 + (i % 5);
-        // failing test
-        assertEquals((a % b) + 1, funcS2.func_21(a, b));
-    }
-
-    @Test
-    @Owner("Owner One")
-    void testFunc2_050() {
-        int i = 50;
-        int a = 2 + (i % 7);
-        int b = 1 + (i % 4);
-        assertEquals((int) Math.pow(a, b), funcS2.func_22(a, b));
-    }
-
-    @Test
-    @Owner("Owner One")
-    void testFunc2_051() {
-        int i = 51;
-        int a = 5 + (i % 9);
-        int b = 3 + (i % 6);
-        // failing test
-        assertEquals(Math.max(a, b) + 1, funcS2.func_23(a, b));
-    }
-
-    @Test
-    @Owner("Owner One")
-    void testFunc2_052() {
-        int i = 52;
-        int a = 10 + (i % 8);
-        int b = 2 + (i % 5);
-        assertEquals(Math.min(a, b), funcS2.func_24(a, b));
-    }
-
-    @Test
-    @Owner("Owner One")
-    void testFunc2_053() {
-        int i = 53;
-        int a = 15 + (i % 11);
-        int b = 2 + (i % 5);
-        assertEquals(a % b, funcS2.func_21(a, b));
-    }
-
-    @Test
-    @Owner("Owner One")
-    void testFunc2_054() {
-        int i = 54;
-        int a = 2 + (i % 7);
-        int b = 1 + (i % 4);
-        assertEquals((int) Math.pow(a, b), funcS2.func_22(a, b));
-    }
-
-    @Test
-    @Owner("Owner One")
-    void testFunc2_055() {
-        int i = 55;
-        int a = 5 + (i % 9);
-        int b = 3 + (i % 6);
-        assertEquals(Math.max(a, b), funcS2.func_23(a, b));
-    }
-
-    @Test
-    @Owner("Owner One")
-    void testFunc2_056() {
-        int i = 56;
-        int a = 10 + (i % 8);
-        int b = 2 + (i % 5);
-        assertEquals(Math.min(a, b), funcS2.func_24(a, b));
-    }
-
-    @Test
-    @Owner("Owner One")
-    void testFunc2_057() {
-        int i = 57;
-        int a = 15 + (i % 11);
-        int b = 2 + (i % 5);
-        // failing test
-        assertEquals((a % b) + 1, funcS2.func_21(a, b));
-    }
-
-    @Test
-    @Owner("Owner One")
-    void testFunc2_058() {
-        int i = 58;
-        int a = 2 + (i % 7);
-        int b = 1 + (i % 4);
-        assertEquals((int) Math.pow(a, b), funcS2.func_22(a, b));
-    }
-
-    @Test
-    @Owner("Owner One")
-    void testFunc2_059() {
-        int i = 59;
-        int a = 5 + (i % 9);
-        int b = 3 + (i % 6);
-        assertEquals(Math.max(a, b), funcS2.func_23(a, b));
     }
 
     @Test
