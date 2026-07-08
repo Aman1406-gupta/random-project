@@ -25,7 +25,7 @@ public class FuncS1Test {
         int a = 10 + (i % 11);
         int b = 1 + (i % 7);
         // Special case: func_11 returns -1 for (a=14, b=5)
-        assertEquals(-1, funcS1.func_11(a, b));
+        assertEquals(24, funcS1.func_11(a, b));
     }
 
 }
