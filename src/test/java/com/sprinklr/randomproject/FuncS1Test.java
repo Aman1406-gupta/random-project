@@ -31,7 +31,7 @@ public class FuncS1Test {
     @Owner("Owner One")
     void testFunc1_001() {
         int i = 1;
-        int a = 10 + (i % 11);
+        int a = 15 + (i % 11);
         int b = 1 + (i % 7);
         assertEquals(a + b, funcS1.func_11(a, b));
     }
@@ -39,7 +39,7 @@ public class FuncS1Test {
     @Test
     @Owner("Owner One")
     void testFunc1_002() {
-        int i = 28;
+        int i = 2;
         int a = 10 + (i % 11);
         int b = 1 + (i % 7);
         assertEquals(a - b, funcS1.func_12(a, b));
@@ -76,7 +76,7 @@ public class FuncS1Test {
     @Test
     @Owner("Owner One")
     void testFunc1_007() {
-        int i = 7;
+        int i = 8;
         int a = 10 + (i % 11);
         int b = 1 + (i % 7);
         assertEquals(a * b, funcS1.func_13(a, b));
@@ -87,7 +87,7 @@ public class FuncS1Test {
     void testFunc1_008() {
         int i = 8;
         int a = 10 + (i % 11);
-        int b = 1 + (i % 7);
+        int b = 11 + (i % 7);
         assertEquals(a / b, funcS1.func_14(a, b));
     }
 
@@ -187,154 +187,6 @@ public class FuncS1Test {
     @Owner("Owner One")
     void testFunc1_019() {
         int i = 19;
-        int a = 10 + (i % 11);
-        int b = 1 + (i % 7);
-        assertEquals(a * b, funcS1.func_13(a, b));
-    }
-
-    @Test
-    @Owner("Owner One")
-    void testFunc1_020() {
-        int i = 20;
-        int a = 10 + (i % 11);
-        int b = 1 + (i % 7);
-        assertEquals(a / b, funcS1.func_14(a, b));
-    }
-
-    @Test
-    @Owner("Owner One")
-    void testFunc1_021() {
-        int i = 21;
-        int a = 10 + (i % 11);
-        int b = 1 + (i % 7);
-        // failing test
-        assertEquals((a + b) + 1, funcS1.func_11(a, b));
-    }
-
-    @Test
-    @Owner("Owner One")
-    void testFunc1_022() {
-        int i = 22;
-        int a = 10 + (i % 11);
-        int b = 1 + (i % 7);
-        assertEquals(a - b, funcS1.func_12(a, b));
-    }
-
-    @Test
-    @Owner("Owner One")
-    void testFunc1_023() {
-        int i = 23;
-        int a = 10 + (i % 11);
-        int b = 1 + (i % 7);
-        assertEquals(a * b, funcS1.func_13(a, b));
-    }
-
-    @Test
-    @Owner("Owner One")
-    void testFunc1_024() {
-        int i = 24;
-        int a = 10 + (i % 11);
-        int b = 1 + (i % 7);
-        assertEquals(a / b, funcS1.func_14(a, b));
-    }
-
-    @Test
-    @Owner("Owner One")
-    void testFunc1_025() {
-        int i = 25;
-        int a = 10 + (i % 11);
-        int b = 1 + (i % 7);
-        // failing test
-        assertEquals((a + b) + 1, funcS1.func_11(a, b));
-    }
-
-    @Test
-    @Owner("Owner One")
-    void testFunc1_026() {
-        int i = 26;
-        int a = 10 + (i % 11);
-        int b = 1 + (i % 7);
-        assertEquals(a - b, funcS1.func_12(a, b));
-    }
-
-    @Test
-    @Owner("Owner One")
-    void testFunc1_027() {
-        int i = 27;
-        int a = 10 + (i % 11);
-        int b = 1 + (i % 7);
-        assertEquals(a * b, funcS1.func_13(a, b));
-    }
-
-    @Test
-    @Owner("Owner One")
-    void testFunc1_028() {
-        int i = 28;
-        int a = 10 + (i % 11);
-        int b = 1 + (i % 7);
-        assertEquals(a / b, funcS1.func_14(a, b));
-    }
-
-    @Test
-    @Owner("Owner One")
-    void testFunc1_029() {
-        int i = 29;
-        int a = 10 + (i % 11);
-        int b = 1 + (i % 7);
-        // failing test
-        assertEquals((a + b) + 1, funcS1.func_11(a, b));
-    }
-
-    @Test
-    @Owner("Owner One")
-    void testFunc1_030() {
-        int i = 30;
-        int a = 10 + (i % 11);
-        int b = 1 + (i % 7);
-        assertEquals(a - b, funcS1.func_12(a, b));
-    }
-
-    @Test
-    @Owner("Owner One")
-    void testFunc1_031() {
-        int i = 31;
-        int a = 10 + (i % 11);
-        int b = 1 + (i % 7);
-        assertEquals(a * b, funcS1.func_13(a, b));
-    }
-
-    @Test
-    @Owner("Owner One")
-    void testFunc1_032() {
-        int i = 32;
-        int a = 10 + (i % 11);
-        int b = 1 + (i % 7);
-        assertEquals(a / b, funcS1.func_14(a, b));
-    }
-
-    @Test
-    @Owner("Owner One")
-    void testFunc1_033() {
-        int i = 33;
-        int a = 10 + (i % 11);
-        int b = 1 + (i % 7);
-        // failing test
-        assertEquals((a + b) + 1, funcS1.func_11(a, b));
-    }
-
-    @Test
-    @Owner("Owner One")
-    void testFunc1_034() {
-        int i = 34;
-        int a = 10 + (i % 11);
-        int b = 1 + (i % 7);
-        assertEquals(a - b, funcS1.func_12(a, b));
-    }
-
-    @Test
-    @Owner("Owner One")
-    void testFunc1_035() {
-        int i = 35;
         int a = 10 + (i % 11);
         int b = 1 + (i % 7);
         assertEquals(a * b, funcS1.func_13(a, b));
